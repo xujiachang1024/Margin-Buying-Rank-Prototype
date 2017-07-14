@@ -25,16 +25,19 @@ public class EastMoneyParser {
 		this.mShanghaiList = new ArrayList<MarginSecurity>();
 		this.mShenzhenList = new ArrayList<MarginSecurity>();
 		this.cmp = new RatioComparator();
+		this.connect();
 	}
 	
 	private boolean connect() {
 		try {
-			this.mShanghaiDoc = Jsoup.connect(mShanghaiURL).get();
+			this.mShanghaiDoc = Jsoup.connect(mShanghaiURL).timeout(60000).get();
+//			System.out.println(mShanghaiDoc.data());
 		} catch (IOException e) {
 			return false;
 		}
 		try {
-			this.mShenzhenDoc = Jsoup.connect(mShenzhenURL).get();
+			this.mShenzhenDoc = Jsoup.connect(mShenzhenURL).timeout(60000).get();
+//			System.out.println(mShenzhenDoc.data());
 		} catch (IOException e) {
 			return false;
 		}
@@ -44,21 +47,24 @@ public class EastMoneyParser {
 	public List<MarginSecurity> updateShanghai() {
 		if (mShanghaiDoc != null) {
 			mShanghaiList.clear();
-			Elements tables = mShanghaiDoc.getElementsByTag("table");
-			Elements tableRows = tables.get(1).getElementsByTag("tr");
+			Elements tables = mShanghaiDoc.select("table#dt_1");
+			Elements tableRows = tables.get(0).select("tr");
 			for (Element tableRow : tableRows) {
-				Elements tableDatas = tableRow.getElementsByTag("td");
-				Element codeCell = tableDatas.get(0);
-				Element nameCell = tableDatas.get(1);
-				Element balanceCell = tableDatas.get(3);
-				Element netBuyingCell = tableDatas.get(7);
-				String inCode = codeCell.text();
-				String inName = nameCell.text();
-				String balanceStr = balanceCell.text();
-				String netBuyingStr = netBuyingCell.text();
-				double inLongBalance = toWanYuan(balanceStr);
-				double inNetBuying = toWanYuan(netBuyingStr);
-				mShanghaiList.add(new MarginSecurity(inCode, inName, inLongBalance, inNetBuying));
+				Elements tableDatas = tableRow.select("td");
+				if (tableDatas.size() >= 7) {
+					Element codeCell = tableDatas.get(0);
+					Element nameCell = tableDatas.get(1);
+					Element balanceCell = tableDatas.get(3);
+					Element netBuyingCell = tableDatas.get(7);
+					String inCode = codeCell.text();
+					String inName = nameCell.text();
+					String balanceStr = balanceCell.text();
+					String netBuyingStr = netBuyingCell.text();
+					double inLongBalance = toWanYuan(balanceStr);
+					double inNetBuying = toWanYuan(netBuyingStr);
+					mShanghaiList.add(new MarginSecurity(inCode, inName, inLongBalance, inNetBuying));
+					System.out.println("add");
+				}
 			}
 			Collections.sort(mShanghaiList, cmp);
 			return mShanghaiList;
@@ -69,10 +75,10 @@ public class EastMoneyParser {
 	public List<MarginSecurity> updateShenzhen() {
 		if (mShenzhenDoc != null) {
 			mShenzhenList.clear();
-			Elements tables = mShenzhenDoc.getElementsByTag("table");
-			Elements tableRows = tables.get(1).getElementsByTag("tr");
+			Elements tables = mShenzhenDoc.select("tbody");
+			Elements tableRows = tables.get(1).select("tr");
 			for (Element tableRow : tableRows) {
-				Elements tableDatas = tableRow.getElementsByTag("td");
+				Elements tableDatas = tableRow.select("td");
 				Element codeCell = tableDatas.get(0);
 				Element nameCell = tableDatas.get(1);
 				Element balanceCell = tableDatas.get(3);
