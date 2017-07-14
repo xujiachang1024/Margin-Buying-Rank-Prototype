@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class EastMoneyParser {
+public class EastMoneyParserJsoup {
 
 	private static String mShanghaiURL = "http://data.eastmoney.com/rzrq/sh.html";
 	private static String mShenzhenURL = "http://data.eastmoney.com/rzrq/sz.html";
@@ -21,7 +21,7 @@ public class EastMoneyParser {
 	private List<MarginSecurity> mShenzhenList;
 	private RatioComparator cmp;
 	
-	public EastMoneyParser() {
+	public EastMoneyParserJsoup() {
 		this.mShanghaiList = new ArrayList<MarginSecurity>();
 		this.mShenzhenList = new ArrayList<MarginSecurity>();
 		this.cmp = new RatioComparator();
