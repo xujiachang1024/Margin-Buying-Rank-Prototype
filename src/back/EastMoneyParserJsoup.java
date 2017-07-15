@@ -13,8 +13,8 @@ import org.jsoup.select.Elements;
 
 public class EastMoneyParserJsoup {
 
-	private static String mShanghaiURL = "http://data.eastmoney.com/rzrq/sh.html";
-	private static String mShenzhenURL = "http://data.eastmoney.com/rzrq/sz.html";
+	private static final String mShanghaiURL = "http://data.eastmoney.com/rzrq/sh.html";
+	private static final String mShenzhenURL = "http://data.eastmoney.com/rzrq/sz.html";
 	private Document mShanghaiDoc;
 	private Document mShenzhenDoc;
 	private List<MarginSecurity> mShanghaiList;
@@ -30,13 +30,13 @@ public class EastMoneyParserJsoup {
 	
 	private boolean connect() {
 		try {
-			this.mShanghaiDoc = Jsoup.connect(mShanghaiURL).timeout(60000).get();
-//			System.out.println(mShanghaiDoc.data());
+			this.mShanghaiDoc = Jsoup.connect(mShanghaiURL).get();
 		} catch (IOException e) {
 			return false;
 		}
+		System.out.println(mShanghaiDoc.outerHtml());
 		try {
-			this.mShenzhenDoc = Jsoup.connect(mShenzhenURL).timeout(60000).get();
+			this.mShenzhenDoc = Jsoup.connect(mShenzhenURL).get();
 //			System.out.println(mShenzhenDoc.data());
 		} catch (IOException e) {
 			return false;
