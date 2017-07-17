@@ -35,7 +35,7 @@ public class MainGUI extends JFrame {
 	private JScrollPane mScrollPane;
 	
 	public MainGUI() {
-		super("华泰证券融资净买率排序器(IE版)");
+		super("华泰证券融资净买率排序器(Chrome版)");
 		this.initializeVariables();
 		this.createGUI();
 		this.addListeners();
@@ -78,7 +78,7 @@ public class MainGUI extends JFrame {
 	private JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel(new BorderLayout());
 		JLabel companyLabel = new JLabel("华泰证券无锡分公司");
-		JLabel rankerLabel = new JLabel("融资净买率排序器(IE版)");
+		JLabel rankerLabel = new JLabel("融资净买率排序器(Chrome版)");
 		JLabel presenterLabel = new JLabel("presented by 徐嘉昌");
 		GraphicSettings.setTextAlignment(companyLabel, rankerLabel, presenterLabel);
 		northPanel.add(companyLabel, BorderLayout.NORTH);

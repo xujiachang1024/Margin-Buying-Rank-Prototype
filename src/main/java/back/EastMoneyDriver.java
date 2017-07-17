@@ -8,7 +8,7 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class EastMoneyDriver {
 	
@@ -30,7 +30,7 @@ public class EastMoneyDriver {
 	public List<MarginSecurity> updateShanghai() {
 		this.mShanghaiList.clear();
 		if (this.mDriver == null) {
-			this.mDriver = new InternetExplorerDriver();
+			this.mDriver = new ChromeDriver();
 			this.mDriver.get(mShanghaiURL);
 		}
 		else {
@@ -57,7 +57,7 @@ public class EastMoneyDriver {
 	public List<MarginSecurity> updateShenzhen() {this.mShanghaiList.clear();
 		this.mShenzhenList.clear();
 		if (this.mDriver == null) {
-			this.mDriver = new InternetExplorerDriver();
+			this.mDriver = new ChromeDriver();
 			this.mDriver.get(mShenzhenURL);
 		}
 		else {
