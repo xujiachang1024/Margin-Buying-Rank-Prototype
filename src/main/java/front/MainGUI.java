@@ -45,6 +45,7 @@ public class MainGUI extends JFrame {
 		this.driver = new EastMoneyDriver();
 		this.mTopNum = 20;
 		this.mTopNumTextField = new JTextField();
+		this.mTopNumTextField.setText("20");
 		this.mUpdateShanghaiButton = new JButton("更新上证融资净买率");
 		this.mUpdateShenzhenButton = new JButton("更新深证融资净买率");
 		this.mQuitButton = new JButton("退出");
@@ -90,6 +91,7 @@ public class MainGUI extends JFrame {
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		JPanel buttonPanel = new JPanel();
 		JLabel sourceLabel = new JLabel("数据来源：东方财富网(http://www.eastmoney.com/)");
+		GraphicSettings.setSize(100, 30, mTopNumTextField);
 		GraphicSettings.setTextAlignment(sourceLabel);
 		buttonPanel.add(mTopNumTextField);
 		buttonPanel.add(mUpdateShanghaiButton);
@@ -114,6 +116,9 @@ public class MainGUI extends JFrame {
 				if (topNumStr != "") {
 					try {
 						mTopNum = Integer.parseInt(topNumStr);
+						if (mTopNum <= 0) {
+							mTopNum = 20;
+						}
 					} catch (Exception exc) {
 						mTopNum = 20;
 					}
@@ -122,7 +127,7 @@ public class MainGUI extends JFrame {
 					mTopNum = 20;
 				}
 				List<MarginSecurity> list = driver.updateShanghai();
-				for (int i = 0; i < mTopNum || i < list.size(); i++) {
+				for (int i = 0; i < mTopNum && i < list.size(); i++) {
 					MarginSecurity se = list.get(i);
 					mAssetModel.addRow(new String[] {
 							Integer.toString(i + 1),
@@ -147,6 +152,9 @@ public class MainGUI extends JFrame {
 				if (topNumStr != "") {
 					try {
 						mTopNum = Integer.parseInt(topNumStr);
+						if (mTopNum <= 0) {
+							mTopNum = 20;
+						}
 					} catch (Exception exc) {
 						mTopNum = 20;
 					}
@@ -155,7 +163,7 @@ public class MainGUI extends JFrame {
 					mTopNum = 20;
 				}
 				List<MarginSecurity> list = driver.updateShenzhen();
-				for (int i = 0; i < mTopNum || i < list.size(); i++) {
+				for (int i = 0; i < mTopNum && i < list.size(); i++) {
 					MarginSecurity se = list.get(i);
 					mAssetModel.addRow(new String[] {
 							Integer.toString(i + 1),
