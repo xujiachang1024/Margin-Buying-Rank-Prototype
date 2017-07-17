@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,9 +24,12 @@ import util.GraphicSettings;
 public class MainGUI extends JFrame {
 	
 	private EastMoneyDriver driver;
+	private Integer mTopNum;
 	
+	private JTextField mTopNumTextField;
 	private JButton mUpdateShanghaiButton;
 	private JButton mUpdateShenzhenButton;
+	private JButton mQuitButton;
 	private DefaultTableModel mAssetModel;
 	private JTable mAssetTable;
 	private JScrollPane mScrollPane;
@@ -39,8 +43,11 @@ public class MainGUI extends JFrame {
 	
 	private void initializeVariables() {
 		this.driver = new EastMoneyDriver();
+		this.mTopNum = 20;
+		this.mTopNumTextField = new JTextField();
 		this.mUpdateShanghaiButton = new JButton("更新上证融资净买率");
 		this.mUpdateShenzhenButton = new JButton("更新深证融资净买率");
+		this.mQuitButton = new JButton("退出");
 		this.mAssetModel = new DefaultTableModel() {
 			@Override
 			   public boolean isCellEditable(int row, int column) {
@@ -84,8 +91,10 @@ public class MainGUI extends JFrame {
 		JPanel buttonPanel = new JPanel();
 		JLabel sourceLabel = new JLabel("数据来源：东方财富网(http://www.eastmoney.com/)");
 		GraphicSettings.setTextAlignment(sourceLabel);
+		buttonPanel.add(mTopNumTextField);
 		buttonPanel.add(mUpdateShanghaiButton);
 		buttonPanel.add(mUpdateShenzhenButton);
+		buttonPanel.add(mQuitButton);
 		centerPanel.add(buttonPanel, BorderLayout.NORTH);
 		centerPanel.add(mScrollPane, BorderLayout.CENTER);
 		centerPanel.add(sourceLabel, BorderLayout.SOUTH);
@@ -93,7 +102,7 @@ public class MainGUI extends JFrame {
 	}
 	
 	private void addListeners() {
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
 		this.mUpdateShanghaiButton.addActionListener(new ActionListener() {
 
@@ -101,8 +110,19 @@ public class MainGUI extends JFrame {
 				while (mAssetModel.getRowCount() > 0) {
 					mAssetModel.removeRow(0);
 				}
+				String topNumStr = mTopNumTextField.getText();
+				if (topNumStr != "") {
+					try {
+						mTopNum = Integer.parseInt(topNumStr);
+					} catch (Exception exc) {
+						mTopNum = 20;
+					}
+				}
+				else {
+					mTopNum = 20;
+				}
 				List<MarginSecurity> list = driver.updateShanghai();
-				for (int i = 0; i < 20; i++) {
+				for (int i = 0; i < mTopNum || i < list.size(); i++) {
 					MarginSecurity se = list.get(i);
 					mAssetModel.addRow(new String[] {
 							Integer.toString(i + 1),
@@ -123,8 +143,19 @@ public class MainGUI extends JFrame {
 				while (mAssetModel.getRowCount() > 0) {
 					mAssetModel.removeRow(0);
 				}
+				String topNumStr = mTopNumTextField.getText();
+				if (topNumStr != "") {
+					try {
+						mTopNum = Integer.parseInt(topNumStr);
+					} catch (Exception exc) {
+						mTopNum = 20;
+					}
+				}
+				else {
+					mTopNum = 20;
+				}
 				List<MarginSecurity> list = driver.updateShenzhen();
-				for (int i = 0; i < 20; i++) {
+				for (int i = 0; i < mTopNum || i < list.size(); i++) {
 					MarginSecurity se = list.get(i);
 					mAssetModel.addRow(new String[] {
 							Integer.toString(i + 1),
@@ -135,6 +166,18 @@ public class MainGUI extends JFrame {
 							Math.round(se.getNetBuyingRatio() * 100.00) / 100.00 + "%"
 					});
 				}
+			}
+			
+		});
+		
+		this.mQuitButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (driver != null) {
+					driver.quit();
+				}
+				MainGUI.this.setVisible(false);
+				MainGUI.this.dispose();
 			}
 			
 		});

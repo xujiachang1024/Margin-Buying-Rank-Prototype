@@ -93,7 +93,9 @@ public class EastMoneyDriver {
 	}
 	
 	public void quit() {
-		this.mDriver.quit();
+		if (this.mDriver != null) {
+			this.mDriver.quit();
+		}
 	}
 	
 	private class RatioComparator implements Comparator<MarginSecurity> {
